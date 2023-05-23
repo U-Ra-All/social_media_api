@@ -30,7 +30,7 @@ class Profile(models.Model):
     phone = models.CharField(max_length=20, null=True, blank=True)
 
     follows = models.ManyToManyField(
-        "self",
+        settings.AUTH_USER_MODEL,
         related_name="followed_by",
         symmetrical=False,
         blank=True,
