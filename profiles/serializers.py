@@ -9,7 +9,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "created_at",
-            "user",
             "first_name",
             "last_name",
             "gender",
