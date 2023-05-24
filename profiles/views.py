@@ -12,3 +12,22 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        """Retrieve the movies with filters"""
+        first_name = self.request.query_params.get("first_name")
+        last_name = self.request.query_params.get("last_name")
+        phone = self.request.query_params.get("phone")
+
+        queryset = self.queryset
+
+        if first_name:
+            queryset = queryset.filter(first_name__icontains=first_name)
+
+        if last_name:
+            queryset = queryset.filter(last_name__icontains=last_name)
+
+        if phone:
+            queryset = queryset.filter(phone__icontains=phone)
+
+        return queryset.distinct()
