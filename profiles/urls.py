@@ -3,7 +3,7 @@ from rest_framework import routers
 from profiles.views import ProfileViewSet
 
 router = routers.DefaultRouter()
-router.register("profiles", ProfileViewSet)
+router.register("", ProfileViewSet)
 
 urlpatterns = router.urls
 
