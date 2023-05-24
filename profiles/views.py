@@ -6,7 +6,7 @@ from profiles.serializers import ProfileSerializer
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
-    queryset = Profile.objects.all()
+    queryset = Profile.objects.prefetch_related("follows")
     serializer_class = ProfileSerializer
     permission_classes = (IsAuthenticated,)
 
