@@ -1,6 +1,7 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 
+from permissions import IsAdminOrIfAuthenticatedReadOnly
 from profiles.models import Profile
 from profiles.serializers import ProfileSerializer
 
@@ -8,7 +9,7 @@ from profiles.serializers import ProfileSerializer
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.prefetch_related("follows")
     serializer_class = ProfileSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -31,3 +32,13 @@ class ProfileViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(phone__icontains=phone)
 
         return queryset.distinct()
+
+
+class MyProfileViewSet(
+    generics.RetrieveUpdateDestroyAPIView,
+):
+    serializer_class = ProfileSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        return self.request.user.profile
