@@ -36,6 +36,13 @@ class ProfileViewSet(viewsets.ModelViewSet):
         return queryset.distinct()
 
 
+class CreateProfileViewSet(generics.CreateAPIView):
+    serializer_class = ProfileSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
 class MyProfileViewSet(
     generics.RetrieveUpdateDestroyAPIView,
 ):
@@ -53,7 +60,7 @@ class FollowViewSet(viewsets.ViewSet):
     def follow(self, request, pk):
         own_profile = request.user.profile
         following_profile = Profile.objects.get(id=pk)
-        own_profile.follows.add(following_profile.user)
+        own_profile.follows.add(following_profile)
 
         return Response(
             {
@@ -66,7 +73,7 @@ class FollowViewSet(viewsets.ViewSet):
     def unfollow(self, request, pk):
         own_profile = request.user.profile
         following_profile = Profile.objects.get(id=pk)
-        own_profile.follows.remove(following_profile.user)
+        own_profile.follows.remove(following_profile)
 
         return Response(
             {

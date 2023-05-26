@@ -41,10 +41,12 @@ class Profile(models.Model):
 
     birth_date = models.DateField(null=True, blank=True, default=None)
     phone = models.CharField(max_length=20, null=True, blank=True)
-    image = models.ImageField(null=True, upload_to=profile_image_file_path)
+    image = models.ImageField(
+        null=True, blank=True, upload_to=profile_image_file_path
+    )
 
     follows = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
+        "self",
         related_name="followed_by",
         symmetrical=False,
         blank=True,
