@@ -57,6 +57,11 @@ class MyProfileViewSet(
 class FollowViewSet(viewsets.ViewSet):
     queryset = Profile.objects.all()
 
+    def list(self, request):
+        queryset = request.user.profile.follows
+        serializer = ProfileSerializer(queryset, many=True)
+        return Response(serializer.data)
+
     def follow(self, request, pk):
         own_profile = request.user.profile
         following_profile = Profile.objects.get(id=pk)
