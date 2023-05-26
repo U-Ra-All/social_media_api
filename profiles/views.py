@@ -1,6 +1,7 @@
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
 
 from permissions import IsAdminOrIfAuthenticatedReadOnly
 from profiles.models import Profile
@@ -44,3 +45,33 @@ class MyProfileViewSet(
 
     def get_object(self):
         return self.request.user.profile
+
+
+class FollowViewSet(viewsets.ViewSet):
+    queryset = Profile.objects.all()
+
+    def follow(self, request, pk):
+        own_profile = request.user.profile
+        following_profile = Profile.objects.get(id=pk)
+        own_profile.follows.add(following_profile.user)
+
+        return Response(
+            {
+                f"message": f"now you are following "
+                f"{following_profile.user.first_name} {following_profile.user.last_name}"
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    def unfollow(self, request, pk):
+        own_profile = request.user.profile
+        following_profile = Profile.objects.get(id=pk)
+        own_profile.follows.remove(following_profile.user)
+
+        return Response(
+            {
+                f"message": f"now you are not following "
+                f"{following_profile.user.first_name} {following_profile.user.last_name}"
+            },
+            status=status.HTTP_200_OK,
+        )
