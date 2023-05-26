@@ -4,6 +4,8 @@ from profiles.models import Profile
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=False)
+
     class Meta:
         model = Profile
         fields = (
@@ -15,4 +17,5 @@ class ProfileSerializer(serializers.ModelSerializer):
             "birth_date",
             "phone",
             "follows",
+            "image",
         )

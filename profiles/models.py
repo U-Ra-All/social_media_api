@@ -1,6 +1,17 @@
+import os
+import uuid
+
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.text import slugify
+
+
+def profile_image_file_path(instance, filename):
+    _, extension = os.path.splitext(filename)
+    filename = f"{slugify(instance.first_name)}-{uuid.uuid4()}{extension}"
+
+    return os.path.join("uploads/profiles/", filename)
 
 
 class Profile(models.Model):
@@ -28,6 +39,7 @@ class Profile(models.Model):
 
     birth_date = models.DateField(null=True, blank=True, default=None)
     phone = models.CharField(max_length=20, null=True, blank=True)
+    image = models.ImageField(null=True, upload_to=profile_image_file_path)
 
     follows = models.ManyToManyField(
         settings.AUTH_USER_MODEL,

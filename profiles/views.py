@@ -1,5 +1,6 @@
 from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from permissions import IsAdminOrIfAuthenticatedReadOnly
 from profiles.models import Profile
@@ -38,6 +39,7 @@ class MyProfileViewSet(
     generics.RetrieveUpdateDestroyAPIView,
 ):
     serializer_class = ProfileSerializer
+    parser_classes = (MultiPartParser, FormParser)
     permission_classes = (IsAuthenticated,)
 
     def get_object(self):
