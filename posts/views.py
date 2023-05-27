@@ -1,4 +1,5 @@
 from rest_framework import generics, viewsets
+from rest_framework.response import Response
 
 from permissions import IsAdminOrIfAuthenticatedReadOnly
 from posts.models import Post
@@ -20,12 +21,12 @@ class CreatePostViewSet(generics.CreateAPIView):
         serializer.save(user=self.request.user)
 
 
-class MyPostViewSet(
-    generics.RetrieveUpdateDestroyAPIView,
-):
+class MyPostsViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
     serializer_class = PostSerializer
     parser_classes = (MultiPartParser, FormParser)
     permission_classes = (IsAuthenticated,)
 
-    def get_object(self):
-        return self.request.user.post
+    def get_queryset(self):
+        queryset = Post.objects.filter(user=self.request.user)
+        return queryset
