@@ -17,7 +17,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
     def get_queryset(self):
-        """Retrieve the movies with filters"""
+        """Retrieve the profiles with filters"""
         first_name = self.request.query_params.get("first_name")
         last_name = self.request.query_params.get("last_name")
         phone = self.request.query_params.get("phone")
