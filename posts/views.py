@@ -13,6 +13,21 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
+    def get_queryset(self):
+        """Retrieve the posts with filters"""
+        title = self.request.query_params.get("title")
+        text = self.request.query_params.get("text")
+
+        queryset = self.queryset
+
+        if title:
+            queryset = queryset.filter(title__icontains=title)
+
+        if text:
+            queryset = queryset.filter(body__icontains=text)
+
+        return queryset.distinct()
+
 
 class CreatePostViewSet(generics.CreateAPIView):
     serializer_class = PostSerializer
