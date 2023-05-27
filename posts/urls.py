@@ -5,6 +5,7 @@ from posts.views import (
     PostViewSet,
     CreatePostViewSet,
     MyPostsViewSet,
+    FollowsPostsViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -27,6 +28,14 @@ urlpatterns = [
                 "put": "update",
                 "patch": "partial_update",
                 "delete": "destroy",
+            }
+        ),
+    ),
+    path(
+        "me/follows-posts",
+        FollowsPostsViewSet.as_view(
+            {
+                "get": "list",
             }
         ),
     ),

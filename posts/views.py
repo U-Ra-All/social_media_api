@@ -18,7 +18,7 @@ class CreatePostViewSet(generics.CreateAPIView):
     serializer_class = PostSerializer
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(user_profile=self.request.user.profile)
 
 
 class MyPostsViewSet(viewsets.ModelViewSet):
@@ -28,5 +28,17 @@ class MyPostsViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        queryset = Post.objects.filter(user=self.request.user)
+        queryset = Post.objects.filter(user_profile=self.request.user.profile)
         return queryset
+
+
+class FollowsPostsViewSet(viewsets.ViewSet):
+    queryset = Post.objects.all()
+
+    def list(self, request):
+        queryset = Post.objects.filter(
+            user_profile__in=request.user.profile.follows.all()
+        )
+        serializer = PostSerializer(queryset, many=True)
+
+        return Response(serializer.data)

@@ -6,6 +6,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 
+from profiles.models import Profile
+
 
 def post_image_file_path(instance, filename):
     _, extension = os.path.splitext(filename)
@@ -23,10 +25,8 @@ class Post(models.Model):
         null=True, blank=True, upload_to=post_image_file_path
     )
 
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="post",
+    user_profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="post", default=1
     )
 
     def __str__(self):
