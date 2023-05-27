@@ -4,14 +4,32 @@ from rest_framework import routers
 from posts.views import (
     PostViewSet,
     CreatePostViewSet,
-    MyPostViewSet,
+    MyPostsViewSet,
 )
 
 router = routers.DefaultRouter()
 router.register("", PostViewSet)
 
 urlpatterns = [
-    path("me/", MyPostViewSet.as_view()),
+    path(
+        "me/",
+        MyPostsViewSet.as_view(
+            {
+                "get": "list",
+            }
+        ),
+    ),
+    path(
+        "me/<int:pk>/",
+        MyPostsViewSet.as_view(
+            {
+                "get": "retrieve",
+                "put": "update",
+                "patch": "partial_update",
+                "delete": "destroy",
+            }
+        ),
+    ),
     path("create/", CreatePostViewSet.as_view()),
     path("", include(router.urls)),
 ]
