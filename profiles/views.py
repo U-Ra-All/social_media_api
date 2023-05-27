@@ -60,11 +60,11 @@ class FollowViewSet(viewsets.ViewSet):
 
     def follow_list(self, request):
         queryset = request.user.profile.follows
-        return Response(serializer.data)
+        return Response(self.serializer.data)
 
     def followed_by_list(self, request):
         queryset = Profile.objects.filter(follows__pk=request.user.profile.pk)
-        return Response(serializer.data)
+        return Response(self.serializer.data)
 
     def follow(self, request, pk):
         own_profile = request.user.profile
