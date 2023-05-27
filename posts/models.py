@@ -1,7 +1,6 @@
 import os
 import uuid
 
-from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
@@ -26,7 +25,7 @@ class Post(models.Model):
     )
 
     user_profile = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name="post", default=1
+        Profile, on_delete=models.CASCADE, related_name="posts", default=1
     )
 
     def __str__(self):
