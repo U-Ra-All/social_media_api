@@ -16,6 +16,8 @@ class PostViewSet(viewsets.ModelViewSet):
 
 class CreatePostViewSet(generics.CreateAPIView):
     serializer_class = PostSerializer
+    parser_classes = (MultiPartParser, FormParser)
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(user_profile=self.request.user.profile)
