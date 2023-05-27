@@ -23,7 +23,7 @@ class Post(models.Model):
         null=True, blank=True, upload_to=post_image_file_path
     )
 
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="post",
