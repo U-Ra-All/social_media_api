@@ -30,3 +30,13 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Like(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name="likes"
+    )
+    user_profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="likes", default=1
+    )
