@@ -6,6 +6,7 @@ from posts.views import (
     CreatePostViewSet,
     MyPostsViewSet,
     FollowsPostsViewSet,
+    LikedPostsViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -32,7 +33,7 @@ urlpatterns = [
         ),
     ),
     path(
-        "me/follows-posts",
+        "me/follows-posts/",
         FollowsPostsViewSet.as_view(
             {
                 "get": "list",
@@ -40,6 +41,14 @@ urlpatterns = [
         ),
     ),
     path("create/", CreatePostViewSet.as_view()),
+    path(
+        "me/liked/",
+        LikedPostsViewSet.as_view(
+            {
+                "get": "list",
+            }
+        ),
+    ),
     path("", include(router.urls)),
 ]
 app_name = "posts"
