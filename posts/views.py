@@ -2,8 +2,8 @@ from rest_framework import generics, viewsets
 from rest_framework.response import Response
 
 from permissions import IsAdminOrIfAuthenticatedReadOnly
-from posts.models import Post
-from posts.serializers import PostSerializer
+from posts.models import Post, Like
+from posts.serializers import PostSerializer, LikeSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 
@@ -55,6 +55,19 @@ class FollowsPostsViewSet(viewsets.ViewSet):
     def list(self, request):
         queryset = Post.objects.filter(
             user_profile__in=request.user.profile.follows.all()
+        )
+        serializer = PostSerializer(queryset, many=True)
+
+        return Response(serializer.data)
+
+
+class LikedPostsViewSet(viewsets.ViewSet):
+    queryset = Post.objects.all()
+    permission_classes = (IsAuthenticated,)
+
+    def list(self, request):
+        queryset = Post.objects.filter(
+            likes__in=Like.objects.filter(user_profile=request.user.profile)
         )
         serializer = PostSerializer(queryset, many=True)
 
