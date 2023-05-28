@@ -75,7 +75,7 @@ class FollowViewSet(viewsets.ViewSet):
         return Response(
             {
                 f"message": f"now you are following "
-                f"{following_profile.user.first_name} {following_profile.user.last_name}"
+                f"{following_profile.first_name} {following_profile.last_name}"
             },
             status=status.HTTP_200_OK,
         )
@@ -88,7 +88,7 @@ class FollowViewSet(viewsets.ViewSet):
         return Response(
             {
                 f"message": f"now you are not following "
-                f"{following_profile.user.first_name} {following_profile.user.last_name}"
+                f"{following_profile.first_name} {following_profile.last_name}"
             },
             status=status.HTTP_200_OK,
         )
