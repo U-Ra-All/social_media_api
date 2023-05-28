@@ -25,7 +25,7 @@ class Post(models.Model):
     )
 
     user_profile = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name="posts", default=1
+        Profile, on_delete=models.CASCADE, related_name="posts"
     )
 
     def __str__(self):
@@ -38,5 +38,19 @@ class Like(models.Model):
         Post, on_delete=models.CASCADE, related_name="likes"
     )
     user_profile = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name="likes", default=1
+        Profile, on_delete=models.CASCADE, related_name="likes"
     )
+
+
+class Comment(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    body = models.TextField()
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name="comments"
+    )
+    user_profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="comments"
+    )
+
+    def __str__(self):
+        return self.body
