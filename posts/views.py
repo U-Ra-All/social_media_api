@@ -1,4 +1,4 @@
-from rest_framework import generics, viewsets
+from rest_framework import generics, viewsets, status
 from rest_framework.response import Response
 
 from permissions import IsAdminOrIfAuthenticatedReadOnly
@@ -61,7 +61,7 @@ class FollowsPostsViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-class LikedPostsViewSet(viewsets.ViewSet):
+class LikeViewSet(viewsets.ViewSet):
     queryset = Post.objects.all()
     permission_classes = (IsAuthenticated,)
 
@@ -72,3 +72,28 @@ class LikedPostsViewSet(viewsets.ViewSet):
         serializer = PostSerializer(queryset, many=True)
 
         return Response(serializer.data)
+
+    def like(self, request, pk):
+        own_profile = request.user.profile
+        liked_post = Post.objects.get(id=pk)
+
+        like = Like(post=liked_post, user_profile=own_profile)
+        like.save()
+        own_profile.likes.add(like)
+
+        return Response(
+            {f"message": f"you like {liked_post.title} post"},
+            status=status.HTTP_200_OK,
+        )
+
+    def unlike(self, request, pk):
+        own_profile = request.user.profile
+        liked_post = Post.objects.get(id=pk)
+
+        like = Like.objects.get(post=liked_post, user_profile=own_profile)
+        own_profile.likes.filter(id=like.id).delete()
+
+        return Response(
+            {f"message": f"you unlike {liked_post.title} post"},
+            status=status.HTTP_200_OK,
+        )
