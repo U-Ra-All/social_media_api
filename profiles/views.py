@@ -56,6 +56,7 @@ class MyProfileViewSet(
 
 class FollowViewSet(viewsets.ViewSet):
     queryset = Profile.objects.all()
+    permission_classes = (IsAuthenticated,)
 
     def follow_list(self, request):
         queryset = request.user.profile.follows
