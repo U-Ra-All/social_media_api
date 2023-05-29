@@ -1,9 +1,10 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, viewsets, status
 from rest_framework.response import Response
 
 from permissions import IsAdminOrIfAuthenticatedReadOnly
-from posts.models import Post, Like
-from posts.serializers import PostSerializer, LikeSerializer
+from posts.models import Post, Like, Comment
+from posts.serializers import PostSerializer, LikeSerializer, CommentSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 
@@ -97,3 +98,19 @@ class LikeViewSet(viewsets.ViewSet):
             {f"message": f"you unlike {liked_post.title} post"},
             status=status.HTTP_200_OK,
         )
+
+
+class CreateCommentViewSet(viewsets.ViewSet):
+    permission_classes = (IsAuthenticated,)
+
+    def create(self, request, pk):
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid():
+            body = serializer.data["body"]
+            post = get_object_or_404(Post, pk=pk)
+            user_profile = post.user_profile
+            Comment.objects.create(
+                body=body, post=post, user_profile=user_profile
+            )
+
+            return Response(status=status.HTTP_201_CREATED)
