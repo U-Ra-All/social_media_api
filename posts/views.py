@@ -52,6 +52,7 @@ class MyPostsViewSet(viewsets.ModelViewSet):
 
 class FollowsPostsViewSet(viewsets.ViewSet):
     queryset = Post.objects.all()
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request):
         queryset = Post.objects.filter(
