@@ -1,4 +1,6 @@
 from django.shortcuts import get_object_or_404
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import generics, viewsets, status
 from rest_framework.response import Response
 
@@ -30,6 +32,23 @@ class PostViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(body__icontains=text)
 
         return queryset.distinct()
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "title",
+                type=OpenApiTypes.STR,
+                description="Filter by title (ex. ?title=My first post)",
+            ),
+            OpenApiParameter(
+                "text",
+                type=OpenApiTypes.STR,
+                description="Filter by text (ex. ?text=post part)",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class CreatePostViewSet(generics.CreateAPIView):

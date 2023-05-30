@@ -1,3 +1,5 @@
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -34,6 +36,28 @@ class ProfileViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(phone__icontains=phone)
 
         return queryset.distinct()
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "first_name",
+                type=OpenApiTypes.STR,
+                description="Filter by first_name (ex. ?first_name=john)",
+            ),
+            OpenApiParameter(
+                "last_name",
+                type=OpenApiTypes.STR,
+                description="Filter by last_name (ex. ?first_name=doe)",
+            ),
+            OpenApiParameter(
+                "phone",
+                type=OpenApiTypes.STR,
+                description="Filter by phone (ex. ?phone=140302)",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class CreateProfileViewSet(generics.CreateAPIView):
