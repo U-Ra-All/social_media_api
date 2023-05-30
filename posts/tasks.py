@@ -1,8 +1,9 @@
-from posts.models import Post
+import time
 
 from celery import shared_task
 
 
 @shared_task
-def count_posts():
-    return Post.objects.count()
+def publish_post(post, delay):
+    time.sleep(delay)
+    post.save()

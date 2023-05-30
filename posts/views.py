@@ -4,9 +4,11 @@ from rest_framework.response import Response
 
 from permissions import IsAdminOrIfAuthenticatedReadOnly
 from posts.models import Post, Like, Comment
-from posts.serializers import PostSerializer, LikeSerializer, CommentSerializer
+from posts.serializers import PostSerializer, CommentSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
+
+from posts.tasks import publish_post
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -60,7 +62,10 @@ class FollowsPostsViewSet(viewsets.ViewSet):
         )
         serializer = PostSerializer(queryset, many=True)
 
-        return Response(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK,
+        )
 
 
 class LikeViewSet(viewsets.ViewSet):
@@ -73,7 +78,10 @@ class LikeViewSet(viewsets.ViewSet):
         )
         serializer = PostSerializer(queryset, many=True)
 
-        return Response(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK,
+        )
 
     def like(self, request, pk):
         own_profile = request.user.profile
@@ -115,3 +123,25 @@ class CreateCommentViewSet(viewsets.ViewSet):
             )
 
             return Response(status=status.HTTP_201_CREATED)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreatePostWithDelayViewSet(viewsets.ViewSet):
+    permission_classes = (IsAuthenticated,)
+
+    def create_with_delay(self, request, delay):
+        data = request.data
+        serializer = PostSerializer(data=data)
+
+        if serializer.is_valid():
+            post = Post(
+                title=serializer.data.get("title"),
+                body=serializer.data.get("body"),
+                user_profile=self.request.user.profile,
+            )
+            publish_post(post, delay)
+
+            return Response(status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)

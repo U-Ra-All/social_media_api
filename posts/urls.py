@@ -8,6 +8,7 @@ from posts.views import (
     FollowsPostsViewSet,
     LikeViewSet,
     CreateCommentViewSet,
+    CreatePostWithDelayViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -53,6 +54,10 @@ urlpatterns = [
     path("like/<int:pk>/", LikeViewSet.as_view({"post": "like"})),
     path("unlike/<int:pk>/", LikeViewSet.as_view({"post": "unlike"})),
     path("<int:pk>/comment", CreateCommentViewSet.as_view({"post": "create"})),
+    path(
+        "create-with-delay/<int:delay>/",
+        CreatePostWithDelayViewSet.as_view({"post": "create_with_delay"}),
+    ),
     path("", include(router.urls)),
 ]
 app_name = "posts"
