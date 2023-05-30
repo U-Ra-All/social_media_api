@@ -1,6 +1,6 @@
 # Social Media API
 
-API service for Social Media management 
+API service for Social Media management
 
 ## Installation
 
@@ -27,6 +27,7 @@ SECRET_KEY = "Your_Super_Secret_Key"
 ## Getting access
 
 - create user via /api/user/register/
+- create user profile via /api/profiles/create
 - get access token via /api/user/token/
 
 ## Features
@@ -35,4 +36,5 @@ SECRET_KEY = "Your_Super_Secret_Key"
 * Admin panel /admin/
 * Documentation is located at /api/doc/swagger/
 * Managing user profiles, posts comments and likes
+
 # social_media_api

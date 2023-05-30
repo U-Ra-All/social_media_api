@@ -1,8 +1,8 @@
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, generics, status
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from permissions import IsAdminOrIfAuthenticatedReadOnly
@@ -106,7 +106,7 @@ class FollowViewSet(viewsets.ViewSet):
         return Response(
             {
                 f"message": f"now you are following "
-                f"{following_profile.first_name} {following_profile.last_name}"
+                            f"{following_profile.first_name} {following_profile.last_name}"
             },
             status=status.HTTP_200_OK,
         )
@@ -119,7 +119,7 @@ class FollowViewSet(viewsets.ViewSet):
         return Response(
             {
                 f"message": f"now you are not following "
-                f"{following_profile.first_name} {following_profile.last_name}"
+                            f"{following_profile.first_name} {following_profile.last_name}"
             },
             status=status.HTTP_200_OK,
         )
