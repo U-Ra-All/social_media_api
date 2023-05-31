@@ -36,5 +36,3 @@ SECRET_KEY = "Your_Super_Secret_Key"
 * Admin panel /admin/
 * Documentation is located at /api/doc/swagger/
 * Managing user profiles, posts comments and likes
-
-# social_media_api
