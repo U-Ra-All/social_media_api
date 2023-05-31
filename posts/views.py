@@ -132,7 +132,7 @@ class CreateCommentViewSet(viewsets.ViewSet):
 
     def create(self, request, pk):
         serializer = CommentSerializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             body = serializer.data["body"]
             post = get_object_or_404(Post, pk=pk)
             user_profile = post.user_profile
@@ -142,8 +142,6 @@ class CreateCommentViewSet(viewsets.ViewSet):
 
             return Response(status=status.HTTP_201_CREATED)
 
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
 
 class CreatePostWithDelayViewSet(viewsets.ViewSet):
     permission_classes = (IsAuthenticated,)
@@ -152,7 +150,7 @@ class CreatePostWithDelayViewSet(viewsets.ViewSet):
         data = request.data
         serializer = PostSerializer(data=data)
 
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             post = Post(
                 title=serializer.data.get("title"),
                 body=serializer.data.get("body"),
@@ -161,5 +159,3 @@ class CreatePostWithDelayViewSet(viewsets.ViewSet):
             publish_post(post, delay)
 
             return Response(status=status.HTTP_200_OK)
-
-        return Response(status=status.HTTP_400_BAD_REQUEST)
