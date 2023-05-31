@@ -16,12 +16,25 @@ python3 manage.py migrate
 python3 manage.py runserver # starts Django Server
 ```
 
+To test posting with delay feature you should run Celery worker server
+
+```shell
+celery -A social_media_api worker -l INFO
+```
+
 Create a file called .env in the same folder as the settings file.
 Make sure to have the following development-specific values in there.
 You can find the example in [.env_sample](.env_sample)
 
 ```shell
 SECRET_KEY = "Your_Super_Secret_Key"
+```
+
+You can use the following superuser (or create another one by yourself):
+
+```shell
+Login: admin_user@mail.com
+Password: 7QancRe2
 ```
 
 ## Getting access
