@@ -106,7 +106,7 @@ class LikeViewSet(viewsets.ViewSet):
 
     def like(self, request, pk):
         own_profile = request.user.profile
-        liked_post = Post.objects.get(id=pk)
+        liked_post = get_object_or_404(Post, id=pk)
 
         like = Like(post=liked_post, user_profile=own_profile)
         like.save()
@@ -119,9 +119,9 @@ class LikeViewSet(viewsets.ViewSet):
 
     def unlike(self, request, pk):
         own_profile = request.user.profile
-        liked_post = Post.objects.get(id=pk)
+        liked_post = get_object_or_404(Post, id=pk)
 
-        like = Like.objects.get(post=liked_post, user_profile=own_profile)
+        like = get_object_or_404(Like, post=liked_post, user_profile=own_profile)
         own_profile.likes.filter(id=like.id).delete()
 
         return Response(
