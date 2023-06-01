@@ -149,11 +149,11 @@ class CreateCommentViewSet(APIView):
             return Response(status=status.HTTP_201_CREATED)
 
 
-class CreatePostWithDelayViewSet(viewsets.ViewSet):
+class CreatePostWithDelayViewSet(APIView):
     serializer_class = PostSerializer
     permission_classes = (IsAuthenticated,)
 
-    def create_with_delay(self, request, delay):
+    def post(self, request, delay):
         data = request.data
         serializer = self.serializer_class(data=data)
 

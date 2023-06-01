@@ -45,7 +45,7 @@ urlpatterns = [
     path("<int:pk>/comment", CreateCommentViewSet.as_view()),
     path(
         "create-with-delay/<int:delay>/",
-        CreatePostWithDelayViewSet.as_view({"post": "create_with_delay"}),
+        CreatePostWithDelayViewSet.as_view(),
     ),
     path("", include(router.urls)),
 ]
