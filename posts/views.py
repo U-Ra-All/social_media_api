@@ -104,7 +104,8 @@ class LikeViewSet(viewsets.ViewSet):
             status=status.HTTP_200_OK,
         )
 
-    def like(self, request, pk):
+    @staticmethod
+    def like(request, pk):
         own_profile = request.user.profile
         liked_post = get_object_or_404(Post, id=pk)
 
@@ -117,7 +118,8 @@ class LikeViewSet(viewsets.ViewSet):
             status=status.HTTP_200_OK,
         )
 
-    def unlike(self, request, pk):
+    @staticmethod
+    def unlike(request, pk):
         own_profile = request.user.profile
         liked_post = get_object_or_404(Post, id=pk)
 
