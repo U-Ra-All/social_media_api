@@ -80,11 +80,12 @@ class MyProfileViewSet(
 
 class FollowViewSet(viewsets.ViewSet):
     queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
     permission_classes = (IsAuthenticated,)
 
     def follow_list(self, request):
         queryset = request.user.profile.follows
-        serializer = ProfileSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         return Response(
             serializer.data,
             status=status.HTTP_200_OK,
@@ -92,7 +93,7 @@ class FollowViewSet(viewsets.ViewSet):
 
     def followed_by_list(self, request):
         queryset = Profile.objects.filter(follows__pk=request.user.profile.pk)
-        serializer = ProfileSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         return Response(
             serializer.data,
             status=status.HTTP_200_OK,
