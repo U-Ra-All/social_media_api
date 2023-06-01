@@ -88,7 +88,7 @@ class FollowsPostsViewSet(APIView):
         )
 
 
-class LikeViewSet(viewsets.ViewSet):
+class LikedPostsViewSet(viewsets.ViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = (IsAuthenticated,)

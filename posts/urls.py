@@ -6,7 +6,7 @@ from posts.views import (
     CreatePostViewSet,
     MyPostsViewSet,
     FollowsPostsViewSet,
-    LikeViewSet,
+    LikedPostsViewSet,
     CreateCommentViewSet,
     CreatePostWithDelayViewSet,
 )
@@ -39,9 +39,9 @@ urlpatterns = [
         FollowsPostsViewSet.as_view(),
     ),
     path("create/", CreatePostViewSet.as_view()),
-    path("liked/", LikeViewSet.as_view({"get": "list"})),
-    path("like/<int:pk>/", LikeViewSet.as_view({"post": "like"})),
-    path("unlike/<int:pk>/", LikeViewSet.as_view({"post": "unlike"})),
+    path("liked/", LikedPostsViewSet.as_view({"get": "list"})),
+    path("like/<int:pk>/", LikedPostsViewSet.as_view({"post": "like"})),
+    path("unlike/<int:pk>/", LikedPostsViewSet.as_view({"post": "unlike"})),
     path("<int:pk>/comment", CreateCommentViewSet.as_view({"post": "create"})),
     path(
         "create-with-delay/<int:delay>/",
