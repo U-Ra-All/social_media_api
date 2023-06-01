@@ -36,21 +36,10 @@ urlpatterns = [
     ),
     path(
         "me/follows-posts/",
-        FollowsPostsViewSet.as_view(
-            {
-                "get": "list",
-            }
-        ),
+        FollowsPostsViewSet.as_view(),
     ),
     path("create/", CreatePostViewSet.as_view()),
-    path(
-        "like/",
-        LikeViewSet.as_view(
-            {
-                "get": "list",
-            }
-        ),
-    ),
+    path("like/", LikeViewSet.as_view({"get": "list"})),
     path("like/<int:pk>/", LikeViewSet.as_view({"post": "like"})),
     path("unlike/<int:pk>/", LikeViewSet.as_view({"post": "unlike"})),
     path("<int:pk>/comment", CreateCommentViewSet.as_view({"post": "create"})),
