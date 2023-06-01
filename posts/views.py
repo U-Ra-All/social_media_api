@@ -138,15 +138,16 @@ class CreateCommentViewSet(APIView):
 
     def post(self, request, pk):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            body = serializer.data["body"]
-            post = get_object_or_404(Post, pk=pk)
-            user_profile = post.user_profile
-            Comment.objects.create(
-                body=body, post=post, user_profile=user_profile
-            )
+        serializer.is_valid(raise_exception=True)
+        body = serializer.data["body"]
+        post = get_object_or_404(Post, pk=pk)
+        user_profile = post.user_profile
 
-            return Response(status=status.HTTP_201_CREATED)
+        Comment.objects.create(
+            body=body, post=post, user_profile=user_profile
+        )
+
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class CreatePostWithDelayViewSet(APIView):
@@ -156,13 +157,14 @@ class CreatePostWithDelayViewSet(APIView):
     def post(self, request, delay):
         data = request.data
         serializer = self.serializer_class(data=data)
-
         serializer.is_valid(raise_exception=True)
+
         post = Post(
             title=serializer.data.get("title"),
             body=serializer.data.get("body"),
             user_profile=self.request.user.profile,
         )
+
         publish_post(post, delay)
 
         return Response(status=status.HTTP_200_OK)
