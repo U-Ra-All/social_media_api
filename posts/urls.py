@@ -42,7 +42,7 @@ urlpatterns = [
     path("liked/", LikedPostsViewSet.as_view({"get": "list"})),
     path("like/<int:pk>/", LikedPostsViewSet.as_view({"post": "like"})),
     path("unlike/<int:pk>/", LikedPostsViewSet.as_view({"post": "unlike"})),
-    path("<int:pk>/comment", CreateCommentViewSet.as_view({"post": "create"})),
+    path("<int:pk>/comment", CreateCommentViewSet.as_view()),
     path(
         "create-with-delay/<int:delay>/",
         CreatePostWithDelayViewSet.as_view({"post": "create_with_delay"}),

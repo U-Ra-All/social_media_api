@@ -132,11 +132,11 @@ class LikedPostsViewSet(viewsets.ViewSet):
         )
 
 
-class CreateCommentViewSet(viewsets.ViewSet):
+class CreateCommentViewSet(APIView):
     serializer_class = CommentSerializer
     permission_classes = (IsAuthenticated,)
 
-    def create(self, request, pk):
+    def post(self, request, pk):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
             body = serializer.data["body"]
