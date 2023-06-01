@@ -5,6 +5,7 @@ from rest_framework import generics, viewsets, status
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from permissions import IsAdminOrIfAuthenticatedReadOnly
 from posts.models import Post, Like, Comment
@@ -70,15 +71,16 @@ class MyPostsViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class FollowsPostsViewSet(viewsets.ViewSet):
+class FollowsPostsViewSet(APIView):
     queryset = Post.objects.all()
+    serializer_class = PostSerializer
     permission_classes = (IsAuthenticated,)
 
-    def list(self, request):
+    def get(self, request):
         queryset = Post.objects.filter(
             user_profile__in=request.user.profile.follows.all()
         )
-        serializer = PostSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
 
         return Response(
             serializer.data,
@@ -88,13 +90,14 @@ class FollowsPostsViewSet(viewsets.ViewSet):
 
 class LikeViewSet(viewsets.ViewSet):
     queryset = Post.objects.all()
+    serializer_class = PostSerializer
     permission_classes = (IsAuthenticated,)
 
     def list(self, request):
         queryset = Post.objects.filter(
             likes__in=Like.objects.filter(user_profile=request.user.profile)
         )
-        serializer = PostSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
 
         return Response(
             serializer.data,
@@ -128,10 +131,11 @@ class LikeViewSet(viewsets.ViewSet):
 
 
 class CreateCommentViewSet(viewsets.ViewSet):
+    serializer_class = CommentSerializer
     permission_classes = (IsAuthenticated,)
 
     def create(self, request, pk):
-        serializer = CommentSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
             body = serializer.data["body"]
             post = get_object_or_404(Post, pk=pk)
@@ -144,11 +148,12 @@ class CreateCommentViewSet(viewsets.ViewSet):
 
 
 class CreatePostWithDelayViewSet(viewsets.ViewSet):
+    serializer_class = PostSerializer
     permission_classes = (IsAuthenticated,)
 
     def create_with_delay(self, request, delay):
         data = request.data
-        serializer = PostSerializer(data=data)
+        serializer = self.serializer_class(data=data)
 
         if serializer.is_valid(raise_exception=True):
             post = Post(
