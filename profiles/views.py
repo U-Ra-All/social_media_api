@@ -99,7 +99,8 @@ class FollowViewSet(viewsets.ViewSet):
             status=status.HTTP_200_OK,
         )
 
-    def follow(self, request, pk):
+    @staticmethod
+    def follow(request, pk):
         own_profile = request.user.profile
         following_profile = Profile.objects.get(id=pk)
         own_profile.follows.add(following_profile)
@@ -112,7 +113,8 @@ class FollowViewSet(viewsets.ViewSet):
             status=status.HTTP_200_OK,
         )
 
-    def unfollow(self, request, pk):
+    @staticmethod
+    def unfollow(request, pk):
         own_profile = request.user.profile
         following_profile = Profile.objects.get(id=pk)
         own_profile.follows.remove(following_profile)
