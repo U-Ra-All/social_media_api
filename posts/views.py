@@ -155,12 +155,12 @@ class CreatePostWithDelayViewSet(viewsets.ViewSet):
         data = request.data
         serializer = self.serializer_class(data=data)
 
-        if serializer.is_valid(raise_exception=True):
-            post = Post(
-                title=serializer.data.get("title"),
-                body=serializer.data.get("body"),
-                user_profile=self.request.user.profile,
-            )
-            publish_post(post, delay)
+        serializer.is_valid(raise_exception=True)
+        post = Post(
+            title=serializer.data.get("title"),
+            body=serializer.data.get("body"),
+            user_profile=self.request.user.profile,
+        )
+        publish_post(post, delay)
 
-            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK)
