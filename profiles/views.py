@@ -116,6 +116,13 @@ class FollowViewSet(viewsets.ViewSet):
             )
 
         following_profile = get_object_or_404(Profile, id=pk)
+
+        if following_profile == own_profile:
+            return Response(
+                {"message": "You can't follow your own profile"},
+                status=status.HTTP_200_OK,
+            )
+
         own_profile.follows.add(following_profile)
 
         return Response(
