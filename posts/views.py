@@ -107,14 +107,25 @@ class LikedPostsViewSet(viewsets.ViewSet):
     @staticmethod
     def like(request, pk):
         own_profile = request.user.profile
-        liked_post = get_object_or_404(Post, id=pk)
 
+        try:
+            post_already_liked = own_profile.likes.get(post=pk)
+        except Like.DoesNotExist:
+            post_already_liked = None
+
+        if post_already_liked:
+            return Response(
+                {"message": f"The post is already liked"},
+                status=status.HTTP_200_OK,
+            )
+
+        liked_post = get_object_or_404(Post, id=pk)
         like = Like(post=liked_post, user_profile=own_profile)
         like.save()
         own_profile.likes.add(like)
 
         return Response(
-            {f"message": f"you like {liked_post.title} post"},
+            {"message": f"You like {liked_post.title} post"},
             status=status.HTTP_200_OK,
         )
 
@@ -127,7 +138,7 @@ class LikedPostsViewSet(viewsets.ViewSet):
         own_profile.likes.filter(id=like.id).delete()
 
         return Response(
-            {f"message": f"you unlike {liked_post.title} post"},
+            {"message": f"You unlike {liked_post.title} post"},
             status=status.HTTP_200_OK,
         )
 
