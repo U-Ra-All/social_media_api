@@ -109,13 +109,13 @@ class LikedPostsViewSet(viewsets.ViewSet):
         own_profile = request.user.profile
 
         try:
-            post_already_liked = own_profile.likes.get(post=pk)
+            post_already_liked = own_profile.likes.get(post__pk=pk)
         except Like.DoesNotExist:
             post_already_liked = None
 
         if post_already_liked:
             return Response(
-                {"message": f"The post is already liked"},
+                {"message": "The post is already liked"},
                 status=status.HTTP_200_OK,
             )
 
