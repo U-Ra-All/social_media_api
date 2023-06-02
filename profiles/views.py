@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, generics, status
@@ -102,13 +103,25 @@ class FollowViewSet(viewsets.ViewSet):
     @staticmethod
     def follow(request, pk):
         own_profile = request.user.profile
-        following_profile = Profile.objects.get(id=pk)
+
+        try:
+            profile_already_following = own_profile.follows.get(pk=pk)
+        except Profile.DoesNotExist:
+            profile_already_following = None
+
+        if profile_already_following:
+            return Response(
+                {"message": "The profile is already following"},
+                status=status.HTTP_200_OK,
+            )
+
+        following_profile = get_object_or_404(Profile, id=pk)
         own_profile.follows.add(following_profile)
 
         return Response(
             {
-                f"message": f"now you are following "
-                            f"{following_profile.first_name} {following_profile.last_name}"
+                "message": "Now you are following "
+                           f"{following_profile.first_name} {following_profile.last_name}"
             },
             status=status.HTTP_200_OK,
         )
@@ -116,13 +129,13 @@ class FollowViewSet(viewsets.ViewSet):
     @staticmethod
     def unfollow(request, pk):
         own_profile = request.user.profile
-        following_profile = Profile.objects.get(id=pk)
+        following_profile = get_object_or_404(Profile, id=pk)
         own_profile.follows.remove(following_profile)
 
         return Response(
             {
-                f"message": f"now you are not following "
-                            f"{following_profile.first_name} {following_profile.last_name}"
+                "message": "Now you are not following "
+                           f"{following_profile.first_name} {following_profile.last_name}"
             },
             status=status.HTTP_200_OK,
         )
