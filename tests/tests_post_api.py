@@ -55,8 +55,6 @@ class AuthenticatedPostApiTest(TestCase):
         serializer = PostSerializer(posts, many=True)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        print("response.data: ", response.data)
-        print("serializer.data: ", serializer.data)
         self.assertEqual(response.data, serializer.data)
 
     def test_create_post(self):
