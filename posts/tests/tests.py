@@ -58,3 +58,16 @@ class AuthenticatedPostApiTest(TestCase):
         print("response.data: ", response.data)
         print("serializer.data: ", serializer.data)
         self.assertEqual(response.data, serializer.data)
+
+    def test_create_post(self):
+        payload = {
+            "title": "Sample title",
+            "body": "Sample body",
+        }
+
+        response = self.client.post(POST_URL + "create/", payload)
+        post = Post.objects.get(id=response.data["id"])
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        for key in payload:
+            self.assertEqual(payload[key], getattr(post, key))
