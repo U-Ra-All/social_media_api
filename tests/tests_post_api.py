@@ -4,7 +4,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from posts.models import Post
+from posts.models import Post, Like
 from posts.serializers import PostSerializer
 from profiles.models import Profile
 
@@ -126,3 +126,41 @@ class PostModelTest(TestCase):
         post = Post.objects.get(id=1)
         expected_object_name = f"{post.title}"
         self.assertEqual(str(post), expected_object_name)
+
+
+class LikeModelTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        user = get_user_model().objects.create_user(
+            email="test_user@mail.com",
+            password="test_password",
+        )
+        profile = Profile.objects.create(
+            user=user,
+            first_name="Sample first_name",
+            last_name="Sample last_name",
+            gender=1,
+            birth_date="2023-05-31",
+            phone="1111111111",
+        )
+        post = Post.objects.create(
+            title="Sample title 1",
+            body="Sample body 1",
+            user_profile=profile,
+        )
+        Like.objects.create(post=post, user_profile=profile)
+
+    def test_created_at_label(self):
+        like = Like.objects.get(id=1)
+        field_label = like._meta.get_field("created_at").verbose_name
+        self.assertEqual(field_label, "created at")
+
+    def test_post_label(self):
+        like = Like.objects.get(id=1)
+        field_label = like._meta.get_field("post").verbose_name
+        self.assertEqual(field_label, "post")
+
+    def test_body_label(self):
+        like = Like.objects.get(id=1)
+        field_label = like._meta.get_field("user_profile").verbose_name
+        self.assertEqual(field_label, "user profile")
