@@ -4,7 +4,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from posts.models import Post, Like
+from posts.models import Post, Like, Comment
 from posts.serializers import PostSerializer
 from profiles.models import Profile
 
@@ -160,7 +160,55 @@ class LikeModelTest(TestCase):
         field_label = like._meta.get_field("post").verbose_name
         self.assertEqual(field_label, "post")
 
-    def test_body_label(self):
+    def test_user_profile_label(self):
         like = Like.objects.get(id=1)
         field_label = like._meta.get_field("user_profile").verbose_name
         self.assertEqual(field_label, "user profile")
+
+
+class CommentModelTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        user = get_user_model().objects.create_user(
+            email="test_user@mail.com",
+            password="test_password",
+        )
+        profile = Profile.objects.create(
+            user=user,
+            first_name="Sample first_name",
+            last_name="Sample last_name",
+            gender=1,
+            birth_date="2023-05-31",
+            phone="1111111111",
+        )
+        post = Post.objects.create(
+            title="Sample title 1",
+            body="Sample body 1",
+            user_profile=profile,
+        )
+        Comment.objects.create(body="Sample comment", post=post, user_profile=profile)
+
+    def test_created_at_label(self):
+        comment = Comment.objects.get(id=1)
+        field_label = comment._meta.get_field("created_at").verbose_name
+        self.assertEqual(field_label, "created at")
+
+    def test_body_label(self):
+        comment = Comment.objects.get(id=1)
+        field_label = comment._meta.get_field("body").verbose_name
+        self.assertEqual(field_label, "body")
+
+    def test_post_label(self):
+        comment = Comment.objects.get(id=1)
+        field_label = comment._meta.get_field("post").verbose_name
+        self.assertEqual(field_label, "post")
+
+    def test_user_profile_label(self):
+        comment = Comment.objects.get(id=1)
+        field_label = comment._meta.get_field("user_profile").verbose_name
+        self.assertEqual(field_label, "user profile")
+
+    def test_comment_str(self):
+        comment = Comment.objects.get(id=1)
+        expected_object_name = f"{comment.body}"
+        self.assertEqual(str(comment), expected_object_name)
