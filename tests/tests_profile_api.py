@@ -4,8 +4,8 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from profiles.serializers import ProfileSerializer
 from profiles.models import Profile
+from profiles.serializers import ProfileSerializer
 
 PROFILE_URL = reverse("profiles:profile-list")
 
